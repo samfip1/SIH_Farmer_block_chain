@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import axios from "axios";
-import natureBg from "../../../../assets/fern-background-nature-green.jpg";
+import natureBg from "../../../../assets/farmer-avatar.png";
 
 interface SigninUpProps {
   onSignIn: (userData: any) => void;

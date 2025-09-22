@@ -1,5 +1,5 @@
 import type { Response } from "express"
-import { Prisma, PrismaClient } from "../generated/prisma/index.js"
+import { Prisma, PrismaClient } from "@prisma/client"
 import { z } from "zod"
 import { AuthService, type AuthRequest } from "../lib/auth.js"
 

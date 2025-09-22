@@ -1,15 +1,9 @@
-import type { Request, Response } from "express"
-import { Prisma, PrismaClient } from "../generated/prisma/index.js"
-import { z } from "zod"
+import type { Request, Response } from "express";
+import { Prisma, PrismaClient } from "@prisma/client";
+import { z } from "zod";
+import type { AuthRequest } from "../lib/auth.js";
 
-interface AuthRequest extends Request {
-  user?: {
-    id: string
-    role: string
-  }
-}
-
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
 
 // Validation schemas
 const createProduceSchema = z.object({
@@ -22,7 +16,7 @@ const createProduceSchema = z.object({
   quantity: z.number().positive("Quantity must be positive"),
   unit: z.string().min(1, "Unit is required"),
   imageUrl: z.string().url().optional(),
-})
+});
 
 const updateProduceSchema = z.object({
   cropName: z.string().min(1).optional(),
@@ -34,40 +28,40 @@ const updateProduceSchema = z.object({
   unit: z.string().min(1).optional(),
   imageUrl: z.string().url().optional(),
   isActive: z.boolean().optional(),
-})
+});
 
 // Create new produce
 export const createProduce = async (req: AuthRequest, res: Response) => {
   try {
-    const validatedData = createProduceSchema.parse(req.body)
-    const userId = req.user?.id
+    const validatedData = createProduceSchema.parse(req.body);
+    const userId = req.user?.userId; // Corrected: userId
 
     if (!userId) {
-      return res.status(401).json({ error: "User not authenticated" })
+      return res.status(401).json({ error: "User not authenticated" });
     }
 
     const user = await prisma.user.findUnique({
       where: { id: userId },
       select: { uniqueId: true, role: true },
-    })
+    });
 
     if (!user) {
-      return res.status(404).json({ error: "User not found" })
+      return res.status(404).json({ error: "User not found" });
     }
 
     if (user.role !== "FARMER") {
-      return res.status(403).json({ error: "Only farmers can add produce" })
+      return res.status(403).json({ error: "Only farmers can add produce" });
     }
 
     const existingProduce = await prisma.produce.findUnique({
       where: { produceUniqueId: validatedData.produceUniqueId },
-    })
+    });
 
     if (existingProduce) {
-      return res.status(400).json({ error: "Produce unique ID already exists" })
+      return res.status(400).json({ error: "Produce unique ID already exists" });
     }
 
-    const { imageUrl, ...restOfData } = validatedData
+    const { imageUrl, ...restOfData } = validatedData;
 
     const produce = await prisma.produce.create({
       data: {
@@ -78,20 +72,20 @@ export const createProduce = async (req: AuthRequest, res: Response) => {
       include: {
         farmer: { select: { id: true, uniqueId: true, fullName: true, username: true } },
       },
-    })
+    });
 
     res.status(201).json({
       message: "Produce created successfully",
       produce,
-    })
+    });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return res.status(400).json({ error: error })
+      return res.status(400).json({ error: "Validation failed", details: error });
     }
-    console.error("Create produce error:", error)
-    res.status(500).json({ error: "Internal server error" })
+    console.error("Create produce error:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
-}
+};
 
 // Get all produces with filters
 export const getProduces = async (req: Request, res: Response) => {
@@ -105,24 +99,24 @@ export const getProduces = async (req: Request, res: Response) => {
       isActive = "true",
       sortBy = "createdAt",
       sortOrder = "desc",
-    } = req.query
+    } = req.query;
 
-    const pageNum = Number.parseInt(page as string)
-    const limitNum = Number.parseInt(limit as string)
-    const skip = (pageNum - 1) * limitNum
+    const pageNum = Number.parseInt(page as string);
+    const limitNum = Number.parseInt(limit as string);
+    const skip = (pageNum - 1) * limitNum;
 
     const where: Prisma.ProduceWhereInput = {
       isActive: isActive === "true",
-    }
+    };
 
     if (cropName) {
-      where.cropName = { contains: cropName as string, mode: "insensitive" }
+      where.cropName = { contains: cropName as string, mode: "insensitive" };
     }
     if (qualityGrade) {
-      where.qualityGrade = qualityGrade as string
+      where.qualityGrade = qualityGrade as string;
     }
     if (farmLocation) {
-      where.farmLocation = { contains: farmLocation as string, mode: "insensitive" }
+      where.farmLocation = { contains: farmLocation as string, mode: "insensitive" };
     }
 
     const [produces, total] = await Promise.all([
@@ -139,24 +133,24 @@ export const getProduces = async (req: Request, res: Response) => {
         },
       }),
       prisma.produce.count({ where }),
-    ])
+    ]);
 
     res.json({
       produces,
       pagination: { page: pageNum, limit: limitNum, total, pages: Math.ceil(total / limitNum) },
-    })
+    });
   } catch (error) {
-    console.error("Get produces error:", error)
-    res.status(500).json({ error: "Internal server error" })
+    console.error("Get produces error:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
-}
+};
 
 // Get produce by ID
 export const getProduceById = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params
+    const { id } = req.params;
     if (!id) {
-      return res.status(400).json({ error: "Produce ID is required" })
+      return res.status(400).json({ error: "Produce ID is required" });
     }
 
     const produce = await prisma.produce.findUnique({
@@ -168,60 +162,60 @@ export const getProduceById = async (req: Request, res: Response) => {
           orderBy: { updatedAt: "desc" },
         },
       },
-    })
+    });
 
     if (!produce) {
-      return res.status(404).json({ error: "Produce not found" })
+      return res.status(404).json({ error: "Produce not found" });
     }
 
-    res.json({ produce })
+    res.json({ produce });
   } catch (error) {
-    console.error("Get produce by ID error:", error)
-    res.status(500).json({ error: "Internal server error" })
+    console.error("Get produce by ID error:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
-}
+};
 
 // Update produce
 export const updateProduce = async (req: AuthRequest, res: Response) => {
   try {
-    const { id } = req.params
-    const validatedData = updateProduceSchema.parse(req.body)
-    const userId = req.user?.id
+    const { id } = req.params;
+    const validatedData = updateProduceSchema.parse(req.body);
+    const userId = req.user?.userId; // Corrected: userId
 
     if (!id) {
-      return res.status(400).json({ error: "Produce ID is required" })
+      return res.status(400).json({ error: "Produce ID is required" });
     }
     if (!userId) {
-      return res.status(401).json({ error: "User not authenticated" })
+      return res.status(401).json({ error: "User not authenticated" });
     }
 
     const existingProduce = await prisma.produce.findUnique({
       where: { id },
       select: { farmerUniqueId: true },
-    })
+    });
 
     if (!existingProduce) {
-      return res.status(404).json({ error: "Produce not found" })
+      return res.status(404).json({ error: "Produce not found" });
     }
 
-    const user = await prisma.user.findUnique({ where: { id: userId }, select: { uniqueId: true } })
+    const user = await prisma.user.findUnique({ where: { id: userId }, select: { uniqueId: true } });
 
     if (existingProduce.farmerUniqueId !== user?.uniqueId) {
-      return res.status(403).json({ error: "You can only update your own produce" })
+      return res.status(403).json({ error: "You can only update your own produce" });
     }
 
-    const updateData: Prisma.ProduceUpdateInput = {}
+    const updateData: Prisma.ProduceUpdateInput = {};
 
-    if (validatedData.cropName !== undefined) updateData.cropName = validatedData.cropName
-    if (validatedData.farmLocation !== undefined) updateData.farmLocation = validatedData.farmLocation
-    if (validatedData.qualityGrade !== undefined) updateData.qualityGrade = validatedData.qualityGrade
-    if (validatedData.harvestDate !== undefined) updateData.harvestDate = validatedData.harvestDate
-    if (validatedData.basePrice !== undefined) updateData.basePrice = validatedData.basePrice
-    if (validatedData.quantity !== undefined) updateData.quantity = validatedData.quantity
-    if (validatedData.unit !== undefined) updateData.unit = validatedData.unit
-    if (validatedData.isActive !== undefined) updateData.isActive = validatedData.isActive
+    if (validatedData.cropName !== undefined) updateData.cropName = validatedData.cropName;
+    if (validatedData.farmLocation !== undefined) updateData.farmLocation = validatedData.farmLocation;
+    if (validatedData.qualityGrade !== undefined) updateData.qualityGrade = validatedData.qualityGrade;
+    if (validatedData.harvestDate !== undefined) updateData.harvestDate = validatedData.harvestDate;
+    if (validatedData.basePrice !== undefined) updateData.basePrice = validatedData.basePrice;
+    if (validatedData.quantity !== undefined) updateData.quantity = validatedData.quantity;
+    if (validatedData.unit !== undefined) updateData.unit = validatedData.unit;
+    if (validatedData.isActive !== undefined) updateData.isActive = validatedData.isActive;
     if (validatedData.imageUrl !== undefined) {
-      updateData.imageUrl = validatedData.imageUrl
+      updateData.imageUrl = validatedData.imageUrl;
     }
 
     const updatedProduce = await prisma.produce.update({
@@ -237,80 +231,80 @@ export const updateProduce = async (req: AuthRequest, res: Response) => {
           },
         },
       },
-    })
+    });
 
     res.json({
       message: "Produce updated successfully",
       produce: updatedProduce,
-    })
+    });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return res.status(400).json({ error: error })
+      return res.status(400).json({ error: "Validation failed", details: error });
     }
-    console.error("Update produce error:", error)
-    res.status(500).json({ error: "Internal server error" })
+    console.error("Update produce error:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
-}
+};
 
 // Delete produce
 export const deleteProduce = async (req: AuthRequest, res: Response) => {
   try {
-    const { id } = req.params
-    const userId = req.user?.id
+    const { id } = req.params;
+    const userId = req.user?.userId; // Corrected: userId
 
     if (!id) {
-      return res.status(400).json({ error: "Produce ID is required" })
+      return res.status(400).json({ error: "Produce ID is required" });
     }
     if (!userId) {
-      return res.status(401).json({ error: "User not authenticated" })
+      return res.status(401).json({ error: "User not authenticated" });
     }
 
     const existingProduce = await prisma.produce.findUnique({
       where: { id },
       select: { farmerUniqueId: true },
-    })
+    });
 
     if (!existingProduce) {
-      return res.status(404).json({ error: "Produce not found" })
+      return res.status(404).json({ error: "Produce not found" });
     }
 
-    const user = await prisma.user.findUnique({ where: { id: userId }, select: { uniqueId: true } })
+    const user = await prisma.user.findUnique({ where: { id: userId }, select: { uniqueId: true } });
 
     if (existingProduce.farmerUniqueId !== user?.uniqueId) {
-      return res.status(403).json({ error: "You can only delete your own produce" })
+      return res.status(403).json({ error: "You can only delete your own produce" });
     }
 
     await prisma.produce.delete({
       where: { id },
-    })
+    });
 
-    res.json({ message: "Produce deleted successfully" })
+    res.json({ message: "Produce deleted successfully" });
   } catch (error) {
-    console.error("Delete produce error:", error)
-    res.status(500).json({ error: "Internal server error" })
+    console.error("Delete produce error:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
-}
+};
 
 // Get farmer's produces
 export const getFarmerProduces = async (req: AuthRequest, res: Response) => {
   try {
-    const userId = req.user?.id
+    const userId = req.user?.userId; // Corrected: userId
 
     if (!userId) {
-      return res.status(401).json({ error: "User not authenticated" })
+      return res.status(401).json({ error: "User not authenticated" });
     }
 
     const user = await prisma.user.findUnique({
       where: { id: userId },
       select: { uniqueId: true, role: true },
-    })
+    });
 
     if (!user) {
-      return res.status(404).json({ error: "User not found" })
+      return res.status(404).json({ error: "User not found" });
     }
 
     if (user.role !== "FARMER") {
-      return res.status(403).json({ error: "Only farmers can access this endpoint" })
+      return res.status(403).json({ error: "Only farmers can access this endpoint" });
     }
 
     const produces = await prisma.produce.findMany({
@@ -329,11 +323,11 @@ export const getFarmerProduces = async (req: AuthRequest, res: Response) => {
       orderBy: {
         createdAt: "desc",
       },
-    })
+    });
 
-    res.json({ produces })
+    res.json({ produces });
   } catch (error) {
-    console.error("Get farmer produces error:", error)
-    res.status(500).json({ error: "Internal server error" })
+    console.error("Get farmer produces error:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
-}
+};

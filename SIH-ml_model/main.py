@@ -13,6 +13,7 @@ origins = [
     "http://localhost",
     "http://localhost:5173", # Your React app's origin
     "http://127.0.0.1:5173",
+    "http://localhost:5175", # Your React app's origin
 ]
 
 app.add_middleware(

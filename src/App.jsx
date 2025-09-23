@@ -12,7 +12,7 @@ const sections = [
 
 function App() {
   const [activeSection, setActiveSection] = useState('command');
-  const [activePartnerTab, setActivePartnerTab] = useState('farmers');
+  const [activePartnerTab, setActivePartnerTab] = useState('distributors');
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [showMessages, setShowMessages] = useState(false);
@@ -27,28 +27,36 @@ function App() {
   const [tradeSearch, setTradeSearch] = useState('');
   const [tradeFilter, setTradeFilter] = useState('All Status');
   const [tradeSort, setTradeSort] = useState('All Dates');
+  const [partnerSearch, setPartnerSearch] = useState('');
+  const [partnerLocationFilter, setPartnerLocationFilter] = useState('All Locations');
+  const [partnerTypeFilter, setPartnerTypeFilter] = useState('All Types');
+  const [partnerStatusFilter, setPartnerStatusFilter] = useState('All Status');
 
   // Sample data arrays
   const logisticsData = [
-    { id: 'PRD-001', crop: 'Premium Basmati Rice', quantity: '500 kg', farmerId: 'FRM-101', status: 'In Transit', price: '₹75/kg', margin: '15%' },
-    { id: 'PRD-002', crop: 'Organic Wheat', quantity: '750 kg', farmerId: 'FRM-102', status: 'Scheduled', price: '₹45/kg', margin: '12%' },
-    { id: 'PRD-003', crop: 'Fresh Tomatoes', quantity: '300 kg', farmerId: 'FRM-103', status: 'Arriving Today', price: '₹35/kg', margin: '20%' },
-    { id: 'PRD-004', crop: 'Golden Mangoes', quantity: '200 kg', farmerId: 'FRM-104', status: 'Quality Check', price: '₹120/kg', margin: '18%' },
-    { id: 'PRD-005', crop: 'Green Spinach', quantity: '150 kg', farmerId: 'FRM-105', status: 'In Transit', price: '₹25/kg', margin: '25%' }
+    { id: 'ORD-001', crop: 'Premium Basmati Rice', quantity: '500 kg', partnerId: 'DST-101', status: 'In Transit', price: '₹75/kg', margin: '15%' },
+    { id: 'ORD-002', crop: 'Organic Wheat', quantity: '750 kg', partnerId: 'DST-102', status: 'Scheduled', price: '₹45/kg', margin: '12%' },
+    { id: 'ORD-003', crop: 'Fresh Tomatoes', quantity: '300 kg', partnerId: 'RTL-301', status: 'Arriving Today', price: '₹35/kg', margin: '20%' },
+    { id: 'ORD-004', crop: 'Golden Mangoes', quantity: '200 kg', partnerId: 'WHL-201', status: 'Quality Check', price: '₹120/kg', margin: '18%' },
+    { id: 'ORD-005', crop: 'Green Spinach', quantity: '150 kg', partnerId: 'RTL-302', status: 'In Transit', price: '₹25/kg', margin: '25%' },
+    { id: 'ORD-006', crop: 'Cardamom', quantity: '50 kg', partnerId: 'WHL-202', status: 'Delivered', price: '₹2500/kg', margin: '10%' }
   ];
 
   const inventoryData = [
-    { id: 'CRP-003', name: 'Fresh Tomatoes', stock: '450 kg', value: '₹42/kg', productId: 'PRD-003', category: 'Vegetables', icon: 'tomato' },
-    { id: 'CRP-004', name: 'Golden Mangoes', stock: '180 kg', value: '₹142/kg', productId: 'PRD-004', category: 'Fruits', icon: 'mango' },
-    { id: 'CRP-005', name: 'Green Spinach', stock: '320 kg', value: '₹31/kg', productId: 'PRD-005', category: 'Vegetables', icon: 'spinach' },
-    { id: 'CRP-002', name: 'Organic Wheat', stock: '900 kg', value: '₹50/kg', productId: 'PRD-002', category: 'Grains', icon: 'wheat' },
-    { id: 'CRP-001', name: 'Premium Basmati Rice', stock: '1,200 kg', value: '₹86/kg', productId: 'PRD-001', category: 'Grains', icon: 'rice' }
+    { id: 'INV-001', name: 'Premium Basmati Rice', stock: '1,200 kg', value: '₹86/kg', productId: 'ORD-001', category: 'Grains', icon: 'rice' },
+    { id: 'INV-002', name: 'Organic Wheat', stock: '900 kg', value: '₹50/kg', productId: 'ORD-002', category: 'Grains', icon: 'wheat' },
+    { id: 'INV-003', name: 'Fresh Tomatoes', stock: '450 kg', value: '₹42/kg', productId: 'ORD-003', category: 'Vegetables', icon: 'tomato' },
+    { id: 'INV-004', name: 'Golden Mangoes', stock: '180 kg', value: '₹142/kg', productId: 'ORD-004', category: 'Fruits', icon: 'mango' },
+    { id: 'INV-005', name: 'Green Spinach', stock: '320 kg', value: '₹31/kg', productId: 'ORD-005', category: 'Vegetables', icon: 'spinach' },
+    { id: 'INV-006', name: 'Cardamom', stock: '75 kg', value: '₹2750/kg', productId: 'ORD-006', category: 'Spices', icon: 'spice' }
   ];
 
   const tradeData = [
-    { id: 'PRD-006', crop: 'Royal Alphonso Mangoes', quantity: '400 kg', farmer: 'FRM-106', status: 'Completed', value: '₹200/kg', margin: '15%', date: '2025-09-01' },
-    { id: 'PRD-007', crop: 'Exotic Dragon Fruit', quantity: '100 kg', farmer: 'FRM-107', status: 'Completed', value: '₹300/kg', margin: '20%', date: '2025-08-28' },
-    { id: 'PRD-008', crop: 'Heritage Cardamom', quantity: '50 kg', farmer: 'FRM-108', status: 'Completed', value: '₹2500/kg', margin: '12%', date: '2025-08-25' }
+    { id: 'TRD-001', crop: 'Royal Alphonso Mangoes', quantity: '400 kg', partner: 'RTL-301', status: 'Completed', value: '₹200/kg', margin: '15%', date: '2025-09-15' },
+    { id: 'TRD-002', crop: 'Exotic Dragon Fruit', quantity: '100 kg', partner: 'WHL-201', status: 'Completed', value: '₹300/kg', margin: '20%', date: '2025-09-10' },
+    { id: 'TRD-003', crop: 'Heritage Cardamom', quantity: '50 kg', partner: 'DST-101', status: 'Completed', value: '₹2500/kg', margin: '12%', date: '2025-09-05' },
+    { id: 'TRD-004', crop: 'Organic Turmeric', quantity: '200 kg', partner: 'WHL-202', status: 'Completed', value: '₹180/kg', margin: '18%', date: '2025-09-01' },
+    { id: 'TRD-005', crop: 'Premium Saffron', quantity: '2 kg', partner: 'RTL-302', status: 'Processing', value: '₹50000/kg', margin: '25%', date: '2025-09-20' }
   ];
 
   // Notifications data
@@ -63,9 +71,33 @@ function App() {
   // Messages data
   const messagesData = [
     { id: 1, sender: 'Farmer Krishna', message: 'The organic wheat harvest is ready for pickup tomorrow morning.', time: '15 min ago', unread: true, avatar: 'https://randomuser.me/api/portraits/men/45.jpg' },
-    { id: 2, sender: 'Distributor Raj', message: 'Can you increase the tomato supply for next week? High demand in local markets.', time: '1 hour ago', unread: true, avatar: 'https://randomuser.me/api/portraits/men/52.jpg' },
+  { id: 2, sender: 'Wholesaler Raj', message: 'Can you increase the tomato supply for next week? High demand in local markets.', time: '1 hour ago', unread: true, avatar: 'https://randomuser.me/api/portraits/men/52.jpg' },
     { id: 3, sender: 'Quality Inspector', message: 'Mango quality inspection scheduled for 2 PM today. Please have samples ready.', time: '2 hours ago', unread: false, avatar: 'https://randomuser.me/api/portraits/women/28.jpg' },
     { id: 4, sender: 'Retailer Priya', message: 'Thank you for the excellent spinach quality. Our customers are very satisfied!', time: '1 day ago', unread: false, avatar: 'https://randomuser.me/api/portraits/women/35.jpg' }
+  ];
+
+  // Partner data arrays
+  const distributorData = [
+    { id: 'DST-101', name: 'Regional Distribution Co.', location: 'Delhi NCR', specialty: 'Bulk Food Distribution', rating: 4.8, status: 'Active', orders: 85, revenue: '₹18.5L', type: 'distributor' },
+    { id: 'DST-102', name: 'North India Distributors', location: 'Punjab & Haryana', specialty: 'Agricultural Products', rating: 4.9, status: 'Active', orders: 72, revenue: '₹14.7L', type: 'distributor' },
+    { id: 'DST-103', name: 'Western Supply Chain', location: 'Maharashtra & Gujarat', specialty: 'Fresh Produce Distribution', rating: 4.6, status: 'Active', orders: 65, revenue: '₹12.3L', type: 'distributor' },
+    { id: 'DST-104', name: 'Eastern Gateway Logistics', location: 'West Bengal', specialty: 'Multi-State Distribution', rating: 4.7, status: 'Pending', orders: 45, revenue: '₹8.9L', type: 'distributor' },
+    { id: 'DST-105', name: 'South Express Distribution', location: 'Tamil Nadu & Karnataka', specialty: 'Express Delivery', rating: 4.5, status: 'Inactive', orders: 32, revenue: '₹6.2L', type: 'distributor' }
+  ];
+
+  const companyData = [
+    { id: 'CMP-201', name: 'AgriSupply Corporation', location: 'Mumbai, Maharashtra', specialty: 'Bulk Agricultural Supplies', rating: 4.7, status: 'Active', orders: 125, revenue: '₹28.4L', type: 'company' },
+    { id: 'CMP-202', name: 'FarmFresh Suppliers', location: 'Ludhiana, Punjab', specialty: 'Fresh Produce Supply', rating: 4.9, status: 'Active', orders: 89, revenue: '₹22.1L', type: 'company' },
+    { id: 'CMP-203', name: 'Organic Harvest Co.', location: 'Bangalore, Karnataka', specialty: 'Organic Product Supply', rating: 4.6, status: 'Active', orders: 67, revenue: '₹15.8L', type: 'company' },
+    { id: 'CMP-204', name: 'Central Agri Traders', location: 'Indore, Madhya Pradesh', specialty: 'Mixed Commodity Supply', rating: 4.4, status: 'Pending', orders: 45, revenue: '₹11.2L', type: 'company' }
+  ];
+
+  const retailerData = [
+    { id: 'RTL-301', name: 'FreshMart Supermarket', location: 'Delhi NCR', specialty: 'Supermarket Chain', rating: 4.8, status: 'Active', orders: 245, revenue: '₹32.7L', type: 'retailer' },
+    { id: 'RTL-302', name: 'Organic Bazaar', location: 'Mumbai', specialty: 'Organic Food Retail', rating: 4.9, status: 'Active', orders: 178, revenue: '₹28.2L', type: 'retailer' },
+    { id: 'RTL-303', name: 'Village Fresh Stores', location: 'Pune, Maharashtra', specialty: 'Local Retail Chain', rating: 4.5, status: 'Active', orders: 156, revenue: '₹19.4L', type: 'retailer' },
+    { id: 'RTL-304', name: 'Green Grocers Network', location: 'Ahmedabad, Gujarat', specialty: 'Organic Retail', rating: 4.7, status: 'Pending', orders: 98, revenue: '₹14.6L', type: 'retailer' },
+    { id: 'RTL-305', name: 'Metro Fresh Markets', location: 'Kolkata, West Bengal', specialty: 'Fresh Produce Retail', rating: 4.3, status: 'Inactive', orders: 67, revenue: '₹9.8L', type: 'retailer' }
   ];
 
   // Filtering functions
@@ -73,11 +105,11 @@ function App() {
     const matchesSearch = logisticsSearch === '' || 
       item.crop.toLowerCase().includes(logisticsSearch.toLowerCase()) ||
       item.id.toLowerCase().includes(logisticsSearch.toLowerCase()) ||
-      item.farmerId.toLowerCase().includes(logisticsSearch.toLowerCase());
+      item.partnerId.toLowerCase().includes(logisticsSearch.toLowerCase());
     const matchesMainSearch = mainSearch === '' ||
       item.crop.toLowerCase().includes(mainSearch.toLowerCase()) ||
       item.id.toLowerCase().includes(mainSearch.toLowerCase()) ||
-      item.farmerId.toLowerCase().includes(mainSearch.toLowerCase());
+      item.partnerId.toLowerCase().includes(mainSearch.toLowerCase());
     const matchesFilter = logisticsFilter === 'All Status' || item.status === logisticsFilter;
     return matchesSearch && matchesMainSearch && matchesFilter;
   });
@@ -104,17 +136,20 @@ function App() {
     const matchesSearch = tradeSearch === '' || 
       item.crop.toLowerCase().includes(tradeSearch.toLowerCase()) ||
       item.id.toLowerCase().includes(tradeSearch.toLowerCase()) ||
-      item.farmer.toLowerCase().includes(tradeSearch.toLowerCase());
+      item.partner.toLowerCase().includes(tradeSearch.toLowerCase());
     const matchesMainSearch = mainSearch === '' ||
       item.crop.toLowerCase().includes(mainSearch.toLowerCase()) ||
       item.id.toLowerCase().includes(mainSearch.toLowerCase()) ||
-      item.farmer.toLowerCase().includes(mainSearch.toLowerCase());
+      item.partner.toLowerCase().includes(mainSearch.toLowerCase());
     const matchesFilter = tradeFilter === 'All Status' || item.status === tradeFilter;
     return matchesSearch && matchesMainSearch && matchesFilter;
   }).filter(item => {
     if (tradeSort === 'All Dates') return true;
     const itemDate = new Date(item.date);
     const now = new Date();
+    if (tradeSort === 'Today') {
+      return itemDate.toDateString() === now.toDateString();
+    }
     if (tradeSort === 'This Week') {
       const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
       return itemDate >= weekAgo;
@@ -128,6 +163,67 @@ function App() {
     }
     return true;
   });
+
+  // Partner filtering functions
+  const getActivePartnerData = () => {
+    if (activePartnerTab === 'distributors') return distributorData;
+    if (activePartnerTab === 'companies') return companyData;
+    if (activePartnerTab === 'retailers') return retailerData;
+    return [];
+  };
+
+  const filteredPartners = getActivePartnerData().filter(partner => {
+    const matchesSearch = partnerSearch === '' || 
+      partner.name.toLowerCase().includes(partnerSearch.toLowerCase()) ||
+      partner.id.toLowerCase().includes(partnerSearch.toLowerCase()) ||
+      partner.location.toLowerCase().includes(partnerSearch.toLowerCase()) ||
+      partner.specialty.toLowerCase().includes(partnerSearch.toLowerCase());
+    
+    const matchesMainSearch = mainSearch === '' ||
+      partner.name.toLowerCase().includes(mainSearch.toLowerCase()) ||
+      partner.id.toLowerCase().includes(mainSearch.toLowerCase()) ||
+      partner.location.toLowerCase().includes(mainSearch.toLowerCase()) ||
+      partner.specialty.toLowerCase().includes(mainSearch.toLowerCase());
+    
+    const matchesLocation = partnerLocationFilter === 'All Locations' || 
+      partner.location.toLowerCase().includes(partnerLocationFilter.toLowerCase());
+    
+    return matchesSearch && matchesMainSearch && matchesLocation;
+  });
+
+  // Calculate dynamic partner counts and total value
+  const getPartnerCounts = () => {
+    const activeDistributors = distributorData.filter(p => p.status === 'Active').length;
+    const totalDistributors = distributorData.length;
+    const activeCompanies = companyData.filter(p => p.status === 'Active').length;
+    const totalCompanies = companyData.length;
+    const activeRetailers = retailerData.filter(p => p.status === 'Active').length;
+    const totalRetailers = retailerData.length;
+    
+    // Calculate total partnership value from all active partners
+    const allActivePartners = [
+      ...distributorData.filter(p => p.status === 'Active'),
+      ...companyData.filter(p => p.status === 'Active'),
+      ...retailerData.filter(p => p.status === 'Active')
+    ];
+    
+    const totalValue = allActivePartners.reduce((sum, partner) => {
+      const value = parseFloat(partner.revenue.replace('₹', '').replace('L', ''));
+      return sum + value;
+    }, 0);
+    
+    return { 
+      distributors: activeDistributors, 
+      companies: activeCompanies, 
+      retailers: activeRetailers,
+      totalDistributors,
+      totalCompanies, 
+      totalRetailers,
+      totalValue: `₹${totalValue.toFixed(1)}L`
+    };
+  };
+
+  const partnerCounts = getPartnerCounts();
 
   // Handle click outside to close dropdowns
   useEffect(() => {
@@ -152,7 +248,7 @@ function App() {
             <img src="/logo.png" alt="AgriFlow Logo" className="agriflow-logo" />
             <div className="sidebar-header-text">
               <span className="sidebar-header-title">AgriFlow</span>
-              <div className="sidebar-subtitle">Distribution Hub</div>
+              <div className="sidebar-subtitle">Wholesaler Hub</div>
             </div>
           </div>
           <nav className="sidebar-menu">
@@ -172,7 +268,7 @@ function App() {
           <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Rajesh Kumar" style={{ width: 40, height: 40, borderRadius: '50%' }} />
           <div className="user-info">
             <div className="user-name">Rajesh Kumar</div>
-            <div className="user-role">Premium Distributor</div>
+            <div className="user-role">Premium Wholesaler</div>
           </div>
           <span className="edit-btn" onClick={() => setShowProfileModal(true)}>
             <i className="fas fa-edit"></i>
@@ -183,7 +279,7 @@ function App() {
         <div className="topbar-row">
           <div className="header-section-inline">
             <div className="header-title">Welcome Back, Rajesh!</div>
-            <div className="header-subtitle">Manage your agricultural distribution empire with ease</div>
+            <div className="header-subtitle">Manage your agricultural wholesaler operations with ease</div>
           </div>
           <div className="topbar-inline">
             <input 
@@ -377,16 +473,22 @@ function App() {
                     <option>Scheduled</option>
                     <option>Arriving Today</option>
                     <option>Quality Check</option>
+                    <option>Delivered</option>
+                    <option>Delayed</option>
+                    <option>Processing</option>
+                    <option>Pickup Ready</option>
+                    <option>On Hold</option>
+                    <option>Cancelled</option>
                   </select>
                 </div>
               </div>
               <table className="logistics-table">
                 <thead>
                   <tr>
-                    <th>PRODUCT DETAILS</th>
+                    <th>ORDER ID</th>
                     <th>PREMIUM CROP</th>
                     <th>QUANTITY</th>
-                    <th>PARTNER FARMER</th>
+                    <th>PARTNER</th>
                     <th>STATUS</th>
                     <th>MARKET PRICE</th>
                     <th>PROFIT MARGIN</th>
@@ -399,7 +501,7 @@ function App() {
                       <td className="product-id">{item.id}</td>
                       <td className="crop-name">{item.crop}</td>
                       <td className="quantity">{item.quantity}</td>
-                      <td className="farmer-id">{item.farmerId}</td>
+                      <td className="partner-id">{item.partnerId}</td>
                       <td><span className={`status-badge ${item.status.toLowerCase().replace(/\s+/g, '-')}`}>{item.status}</span></td>
                       <td className="market-price">{item.price}</td>
                       <td className="profit-margin">{item.margin}</td>
@@ -436,6 +538,13 @@ function App() {
                     <option>Grains</option>
                     <option>Vegetables</option>
                     <option>Fruits</option>
+                    <option>Spices</option>
+                    <option>Pulses</option>
+                    <option>Dairy</option>
+                    <option>Organic</option>
+                    <option>Processed</option>
+                    <option>Seeds</option>
+                    <option>Herbs</option>
                   </select>
                   <select 
                     className="inventory-sort"
@@ -445,6 +554,10 @@ function App() {
                     <option>Sort by Name</option>
                     <option>Sort by Stock</option>
                     <option>Sort by Value</option>
+                    <option>Sort by Category</option>
+                    <option>Sort by Date Added</option>
+                    <option>Low Stock First</option>
+                    <option>High Value First</option>
                   </select>
                   <button className="add-product-btn">
                     <i className="fas fa-plus"></i> Add New Product
@@ -510,6 +623,10 @@ function App() {
                     <option>Completed</option>
                     <option>Processing</option>
                     <option>In Transit</option>
+                    <option>Pending</option>
+                    <option>Cancelled</option>
+                    <option>Delayed</option>
+                    <option>Returned</option>
                   </select>
                   <select 
                     className="trade-sort"
@@ -517,9 +634,13 @@ function App() {
                     onChange={(e) => setTradeSort(e.target.value)}
                   >
                     <option>All Dates</option>
+                    <option>Today</option>
                     <option>This Week</option>
                     <option>This Month</option>
                     <option>Last 3 Months</option>
+                    <option>Last 6 Months</option>
+                    <option>This Year</option>
+                    <option>Custom Range</option>
                   </select>
                 </div>
               </div>
@@ -527,10 +648,10 @@ function App() {
               <table className="trade-table">
                 <thead>
                   <tr>
-                    <th>PRODUCT ID</th>
+                    <th>TRADE ID</th>
                     <th>PREMIUM CROP</th>
                     <th>QUANTITY</th>
-                    <th>FARMER PARTNER</th>
+                    <th>PARTNER</th>
                     <th>STATUS</th>
                     <th>DEAL VALUE</th>
                     <th>PROFIT MARGIN</th>
@@ -543,7 +664,7 @@ function App() {
                       <td className="product-id">{item.id}</td>
                       <td className="premium-crop">{item.crop}</td>
                       <td className="quantity">{item.quantity}</td>
-                      <td className="farmer-partner">{item.farmer}</td>
+                      <td className="partner-name">{item.partner}</td>
                       <td><span className={`status-badge ${item.status.toLowerCase()}`}>{item.status}</span></td>
                       <td className="deal-value">{item.value}</td>
                       <td className="profit-margin">{item.margin}</td>
@@ -797,13 +918,33 @@ function App() {
               <div className="partner-header-controls">
                 <div className="partner-search">
                   <i className="fas fa-search"></i>
-                  <input type="text" placeholder="Search by name, location, specialty..." />
+                  <input 
+                    type="text" 
+                    placeholder="Search by name, location, specialty..." 
+                    value={partnerSearch}
+                    onChange={(e) => setPartnerSearch(e.target.value)}
+                  />
                 </div>
-                <select className="partner-location-filter">
+                <select 
+                  className="partner-location-filter"
+                  value={partnerLocationFilter}
+                  onChange={(e) => setPartnerLocationFilter(e.target.value)}
+                >
                   <option>All Locations</option>
-                  <option>Himachal Pradesh</option>
+                  <option>Delhi NCR</option>
+                  <option>Mumbai</option>
                   <option>Punjab</option>
+                  <option>Haryana</option>
                   <option>Maharashtra</option>
+                  <option>Gujarat</option>
+                  <option>Karnataka</option>
+                  <option>Tamil Nadu</option>
+                  <option>West Bengal</option>
+                  <option>Madhya Pradesh</option>
+                  <option>Rajasthan</option>
+                  <option>Uttar Pradesh</option>
+                  <option>Bihar</option>
+                  <option>Odisha</option>
                 </select>
                 <button className="add-partner-btn">
                   <i className="fas fa-plus"></i>
@@ -816,31 +957,31 @@ function App() {
             <div className="partner-stats-grid">
               <div className="partner-stat-card green">
                 <div className="stat-icon">
-                  <i className="fas fa-seedling"></i>
+                  <i className="fas fa-truck"></i>
                 </div>
                 <div className="stat-content">
-                  <div className="stat-number">4</div>
-                  <div className="stat-label">Active Farmers</div>
+                  <div className="stat-number">{partnerCounts.distributors}</div>
+                  <div className="stat-label">Active Distributors</div>
                 </div>
               </div>
               
               <div className="partner-stat-card blue">
                 <div className="stat-icon">
-                  <i className="fas fa-warehouse"></i>
+                  <i className="fas fa-building"></i>
                 </div>
                 <div className="stat-content">
-                  <div className="stat-number">6</div>
-                  <div className="stat-label">Wholesale Partners</div>
+                  <div className="stat-number">{partnerCounts.companies}</div>
+                  <div className="stat-label">Company Partners</div>
                 </div>
               </div>
               
               <div className="partner-stat-card purple">
                 <div className="stat-icon">
-                  <i className="fas fa-truck"></i>
+                  <i className="fas fa-store"></i>
                 </div>
                 <div className="stat-content">
-                  <div className="stat-number">5</div>
-                  <div className="stat-label">Distribution Partners</div>
+                  <div className="stat-number">{partnerCounts.retailers}</div>
+                  <div className="stat-label">Active Retailers</div>
                 </div>
               </div>
               
@@ -849,7 +990,7 @@ function App() {
                   <i className="fas fa-handshake"></i>
                 </div>
                 <div className="stat-content">
-                  <div className="stat-number">₹42.7L</div>
+                  <div className="stat-number">{partnerCounts.totalValue}</div>
                   <div className="stat-label">Total Partnership Value</div>
                 </div>
               </div>
@@ -858,211 +999,78 @@ function App() {
             {/* Partner Category Tabs */}
             <div className="partner-tabs">
               <div 
-                className={`tab-item ${activePartnerTab === 'farmers' ? 'active' : ''}`}
-                onClick={() => setActivePartnerTab('farmers')}
-              >
-                <i className="fas fa-leaf"></i>
-                Farmers & Suppliers
-              </div>
-              <div 
-                className={`tab-item ${activePartnerTab === 'wholesale' ? 'active' : ''}`}
-                onClick={() => setActivePartnerTab('wholesale')}
-              >
-                <i className="fas fa-warehouse"></i>
-                Wholesale Partners
-              </div>
-              <div 
-                className={`tab-item ${activePartnerTab === 'distribution' ? 'active' : ''}`}
-                onClick={() => setActivePartnerTab('distribution')}
+                className={`tab-item ${activePartnerTab === 'distributors' ? 'active' : ''}`}
+                onClick={() => setActivePartnerTab('distributors')}
               >
                 <i className="fas fa-truck"></i>
-                Distribution Partners
+                Distributors
+              </div>
+              <div 
+                className={`tab-item ${activePartnerTab === 'companies' ? 'active' : ''}`}
+                onClick={() => setActivePartnerTab('companies')}
+              >
+                <i className="fas fa-building"></i>
+                Company Partners
+              </div>
+              <div 
+                className={`tab-item ${activePartnerTab === 'retailers' ? 'active' : ''}`}
+                onClick={() => setActivePartnerTab('retailers')}
+              >
+                <i className="fas fa-store"></i>
+                Retailers
               </div>
             </div>
 
             {/* Partner Cards Grid */}
             <div className="partner-cards-grid">
-              {/* Farmers & Suppliers */}
-              {activePartnerTab === 'farmers' && (
-                <>
-                  <div className="partner-card">
+              {filteredPartners.length === 0 ? (
+                <div className="no-partners-message">
+                  <i className="fas fa-search"></i>
+                  <h3>No partners found</h3>
+                  <p>Try adjusting your search criteria or filters</p>
+                </div>
+              ) : (
+                filteredPartners.map(partner => (
+                  <div key={partner.id} className={`partner-card ${partner.type}`}>
                     <div className="partner-card-header">
-                      <div className="partner-avatar">
-                        <i className="fas fa-leaf"></i>
+                      <div className={`partner-avatar ${partner.type}`}>
+                        <i className={`fas ${
+                          partner.type === 'distributor' ? 'fa-truck' : 
+                          partner.type === 'company' ? 'fa-building' : 
+                          'fa-store'
+                        }`}></i>
                       </div>
                       <div className="partner-info">
-                        <h3>Rajesh Patel</h3>
-                        <div className="partner-id">FRM-101</div>
+                        <h3>{partner.name}</h3>
+                        <div className="partner-id">{partner.id}</div>
                       </div>
-                      <div className="partner-status active">Active</div>
+                      <div className={`partner-status ${partner.status.toLowerCase()}`}>{partner.status}</div>
                     </div>
                     <div className="partner-details">
                       <div className="detail-item">
                         <i className="fas fa-map-marker-alt"></i>
-                        <span>Himachal Pradesh</span>
+                        <span>{partner.location}</span>
                       </div>
                       <div className="detail-item">
-                        <i className="fas fa-seedling"></i>
-                        <span>Premium Basmati Rice</span>
+                        <i className={`fas ${
+                          partner.type === 'distributor' ? 'fa-boxes' : 
+                          partner.type === 'company' ? 'fa-industry' : 
+                          'fa-shopping-cart'
+                        }`}></i>
+                        <span>{partner.specialty}</span>
                       </div>
                       <div className="detail-item">
                         <i className="fas fa-star"></i>
-                        <span>4.8 rating</span>
+                        <span>{partner.rating} rating</span>
                       </div>
                     </div>
                     <div className="partner-metrics">
                       <div className="metric">
-                        <div className="metric-value">45</div>
-                        <div className="metric-label">DEALS</div>
-                      </div>
-                      <div className="metric">
-                        <div className="metric-value">₹12.5L</div>
-                        <div className="metric-label">REVENUE</div>
-                      </div>
-                    </div>
-                    <div className="partner-actions">
-                      <button className="action-btn primary">
-                        <i className="fas fa-eye"></i>
-                        View
-                      </button>
-                      <button className="action-btn secondary">
-                        <i className="fas fa-envelope"></i>
-                        Contact
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="partner-card">
-                    <div className="partner-card-header">
-                      <div className="partner-avatar">
-                        <i className="fas fa-leaf"></i>
-                      </div>
-                      <div className="partner-info">
-                        <h3>Priya Sharma</h3>
-                        <div className="partner-id">FRM-102</div>
-                      </div>
-                      <div className="partner-status active">Active</div>
-                    </div>
-                    <div className="partner-details">
-                      <div className="detail-item">
-                        <i className="fas fa-map-marker-alt"></i>
-                        <span>Punjab</span>
-                      </div>
-                      <div className="detail-item">
-                        <i className="fas fa-seedling"></i>
-                        <span>Organic Wheat</span>
-                      </div>
-                      <div className="detail-item">
-                        <i className="fas fa-star"></i>
-                        <span>4.9 rating</span>
-                      </div>
-                    </div>
-                    <div className="partner-metrics">
-                      <div className="metric">
-                        <div className="metric-value">38</div>
-                        <div className="metric-label">DEALS</div>
-                      </div>
-                      <div className="metric">
-                        <div className="metric-value">₹8.7L</div>
-                        <div className="metric-label">REVENUE</div>
-                      </div>
-                    </div>
-                    <div className="partner-actions">
-                      <button className="action-btn primary">
-                        <i className="fas fa-eye"></i>
-                        View
-                      </button>
-                      <button className="action-btn secondary">
-                        <i className="fas fa-envelope"></i>
-                        Contact
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="partner-card">
-                    <div className="partner-card-header">
-                      <div className="partner-avatar">
-                        <i className="fas fa-leaf"></i>
-                      </div>
-                      <div className="partner-info">
-                        <h3>Mohammed Ali</h3>
-                        <div className="partner-id">FRM-103</div>
-                      </div>
-                      <div className="partner-status active">Active</div>
-                    </div>
-                    <div className="partner-details">
-                      <div className="detail-item">
-                        <i className="fas fa-map-marker-alt"></i>
-                        <span>Maharashtra</span>
-                      </div>
-                      <div className="detail-item">
-                        <i className="fas fa-seedling"></i>
-                        <span>Fresh Tomatoes</span>
-                      </div>
-                      <div className="detail-item">
-                        <i className="fas fa-star"></i>
-                        <span>4.6 rating</span>
-                      </div>
-                    </div>
-                    <div className="partner-metrics">
-                      <div className="metric">
-                        <div className="metric-value">52</div>
-                        <div className="metric-label">DEALS</div>
-                      </div>
-                      <div className="metric">
-                        <div className="metric-value">₹6.3L</div>
-                        <div className="metric-label">REVENUE</div>
-                      </div>
-                    </div>
-                    <div className="partner-actions">
-                      <button className="action-btn primary">
-                        <i className="fas fa-eye"></i>
-                        View
-                      </button>
-                      <button className="action-btn secondary">
-                        <i className="fas fa-envelope"></i>
-                        Contact
-                      </button>
-                    </div>
-                  </div>
-                </>
-              )}
-
-              {/* Wholesale Partners */}
-              {activePartnerTab === 'wholesale' && (
-                <>
-                  <div className="partner-card">
-                    <div className="partner-card-header">
-                      <div className="partner-avatar wholesale">
-                        <i className="fas fa-warehouse"></i>
-                      </div>
-                      <div className="partner-info">
-                        <h3>Metro Wholesale Hub</h3>
-                        <div className="partner-id">WHL-201</div>
-                      </div>
-                      <div className="partner-status active">Active</div>
-                    </div>
-                    <div className="partner-details">
-                      <div className="detail-item">
-                        <i className="fas fa-map-marker-alt"></i>
-                        <span>Mumbai, Maharashtra</span>
-                      </div>
-                      <div className="detail-item">
-                        <i className="fas fa-boxes"></i>
-                        <span>Bulk Groceries</span>
-                      </div>
-                      <div className="detail-item">
-                        <i className="fas fa-star"></i>
-                        <span>4.7 rating</span>
-                      </div>
-                    </div>
-                    <div className="partner-metrics">
-                      <div className="metric">
-                        <div className="metric-value">125</div>
+                        <div className="metric-value">{partner.orders}</div>
                         <div className="metric-label">ORDERS</div>
                       </div>
                       <div className="metric">
-                        <div className="metric-value">₹28.4L</div>
+                        <div className="metric-value">{partner.revenue}</div>
                         <div className="metric-label">REVENUE</div>
                       </div>
                     </div>
@@ -1077,153 +1085,7 @@ function App() {
                       </button>
                     </div>
                   </div>
-
-                  <div className="partner-card">
-                    <div className="partner-card-header">
-                      <div className="partner-avatar wholesale">
-                        <i className="fas fa-warehouse"></i>
-                      </div>
-                      <div className="partner-info">
-                        <h3>Punjab Grain Traders</h3>
-                        <div className="partner-id">WHL-202</div>
-                      </div>
-                      <div className="partner-status active">Active</div>
-                    </div>
-                    <div className="partner-details">
-                      <div className="detail-item">
-                        <i className="fas fa-map-marker-alt"></i>
-                        <span>Ludhiana, Punjab</span>
-                      </div>
-                      <div className="detail-item">
-                        <i className="fas fa-boxes"></i>
-                        <span>Rice & Wheat</span>
-                      </div>
-                      <div className="detail-item">
-                        <i className="fas fa-star"></i>
-                        <span>4.9 rating</span>
-                      </div>
-                    </div>
-                    <div className="partner-metrics">
-                      <div className="metric">
-                        <div className="metric-value">89</div>
-                        <div className="metric-label">ORDERS</div>
-                      </div>
-                      <div className="metric">
-                        <div className="metric-value">₹22.1L</div>
-                        <div className="metric-label">REVENUE</div>
-                      </div>
-                    </div>
-                    <div className="partner-actions">
-                      <button className="action-btn primary">
-                        <i className="fas fa-eye"></i>
-                        View
-                      </button>
-                      <button className="action-btn secondary">
-                        <i className="fas fa-envelope"></i>
-                        Contact
-                      </button>
-                    </div>
-                  </div>
-                </>
-              )}
-
-              {/* Distribution Partners */}
-              {activePartnerTab === 'distribution' && (
-                <>
-                  <div className="partner-card">
-                    <div className="partner-card-header">
-                      <div className="partner-avatar distribution">
-                        <i className="fas fa-truck"></i>
-                      </div>
-                      <div className="partner-info">
-                        <h3>Swift Logistics</h3>
-                        <div className="partner-id">DST-301</div>
-                      </div>
-                      <div className="partner-status active">Active</div>
-                    </div>
-                    <div className="partner-details">
-                      <div className="detail-item">
-                        <i className="fas fa-map-marker-alt"></i>
-                        <span>Delhi NCR</span>
-                      </div>
-                      <div className="detail-item">
-                        <i className="fas fa-shipping-fast"></i>
-                        <span>Express Delivery</span>
-                      </div>
-                      <div className="detail-item">
-                        <i className="fas fa-star"></i>
-                        <span>4.8 rating</span>
-                      </div>
-                    </div>
-                    <div className="partner-metrics">
-                      <div className="metric">
-                        <div className="metric-value">156</div>
-                        <div className="metric-label">DELIVERIES</div>
-                      </div>
-                      <div className="metric">
-                        <div className="metric-value">₹15.7L</div>
-                        <div className="metric-label">REVENUE</div>
-                      </div>
-                    </div>
-                    <div className="partner-actions">
-                      <button className="action-btn primary">
-                        <i className="fas fa-eye"></i>
-                        View
-                      </button>
-                      <button className="action-btn secondary">
-                        <i className="fas fa-envelope"></i>
-                        Contact
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="partner-card">
-                    <div className="partner-card-header">
-                      <div className="partner-avatar distribution">
-                        <i className="fas fa-truck"></i>
-                      </div>
-                      <div className="partner-info">
-                        <h3>Rural Connect Transport</h3>
-                        <div className="partner-id">DST-302</div>
-                      </div>
-                      <div className="partner-status active">Active</div>
-                    </div>
-                    <div className="partner-details">
-                      <div className="detail-item">
-                        <i className="fas fa-map-marker-alt"></i>
-                        <span>Rajasthan</span>
-                      </div>
-                      <div className="detail-item">
-                        <i className="fas fa-shipping-fast"></i>
-                        <span>Rural Distribution</span>
-                      </div>
-                      <div className="detail-item">
-                        <i className="fas fa-star"></i>
-                        <span>4.5 rating</span>
-                      </div>
-                    </div>
-                    <div className="partner-metrics">
-                      <div className="metric">
-                        <div className="metric-value">98</div>
-                        <div className="metric-label">DELIVERIES</div>
-                      </div>
-                      <div className="metric">
-                        <div className="metric-value">₹11.2L</div>
-                        <div className="metric-label">REVENUE</div>
-                      </div>
-                    </div>
-                    <div className="partner-actions">
-                      <button className="action-btn primary">
-                        <i className="fas fa-eye"></i>
-                        View
-                      </button>
-                      <button className="action-btn secondary">
-                        <i className="fas fa-envelope"></i>
-                        Contact
-                      </button>
-                    </div>
-                  </div>
-                </>
+                ))
               )}
             </div>
           </section>

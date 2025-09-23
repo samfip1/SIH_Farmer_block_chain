@@ -6,8 +6,8 @@
 
 body {
   font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
-  background: #ffffff;
-  color: #2d3748;
+  background: #e6f0fa; /* light blue for wholesaler */
+  color: #1a237e; /* dark blue for wholesaler */
   width: 100vw;
   overflow-x: hidden;
 }
@@ -20,11 +20,11 @@ body {
 .header-title {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #2d3748;
+  color: #1a237e; /* dark blue for wholesaler */
 }
 .header-subtitle {
   font-size: 1.15rem;
-  color: #718096;
+  color: #1976d2; /* medium blue for wholesaler */
   font-weight: 500;
 }
 .stats-section {
@@ -55,7 +55,7 @@ body {
 .stat-change {
   font-size: 13px;
   font-weight: 600;
-  color: #4CAF50;
+  color: #1976d2;
 }
 .orders-quick-row {
   display: flex;
@@ -94,13 +94,13 @@ body {
 .view-all-link {
   font-size: 14px;
   font-weight: 600;
-  color: #4CAF50;
+  color: #1976d2;
   cursor: pointer;
   transition: color 0.2s;
 }
 
 .view-all-link:hover {
-  color: #388E3C;
+  color: #1565c0;
 }
 .orders-table {
   width: 100%;
@@ -167,8 +167,8 @@ body {
 }
 
 .status-badge.delivered {
-  background: #dcfce7;
-  color: #4CAF50;
+  background: #e3f2fd;
+  color: #1976d2;
 }
 
 .status-badge.transit {
@@ -190,12 +190,12 @@ body {
   text-align: left;
 }
 .action-btn.primary {
-  background: #4CAF50;
+  background: #1976d2;
   color: #fff;
   margin-bottom: 8px;
 }
 .action-btn.primary:hover {
-  background: #388E3C;
+  background: #1565c0;
 }
 .action-btn.secondary {
   background: #6b7280;
@@ -289,10 +289,10 @@ body {
   position: relative;
 }
 .sidebar-menu-item.active {
-  background: #4CAF50;
+  background: #1976d2;
   color: #ffffff;
   font-weight: 600;
-  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.25);
+  box-shadow: 0 4px 12px rgba(25, 118, 210, 0.25);
 }
 .sidebar-menu-item:hover:not(.active) {
   background: #f1f5f9;
@@ -305,7 +305,7 @@ body {
   text-align: center;
 }
 .sidebar-user-card {
-  background: linear-gradient(135deg, #66BB6A 0%, #4CAF50 100%);
+  background: linear-gradient(135deg, #64b5f6 0%, #1976d2 100%);
   color: white;
   border-radius: 16px;
   margin: 24px 16px 16px 16px;
@@ -722,7 +722,7 @@ body {
   background: #4CAF50;
   color: #fff;
 }
-.stat-icon.green { background: #4CAF50; color: #fff; }
+.stat-icon.green { background: #1976d2; color: #fff; }
 .stat-icon.blue { background: #3182ce; color: #fff; }
 .stat-icon.purple { background: #805ad5; color: #fff; }
 .stat-icon.orange { background: #ed8936; color: #fff; }
@@ -932,7 +932,7 @@ body {
   color: #fff;
 }
 .status-badge.arriving-today {
-  background: linear-gradient(135deg, #4CAF50 0%, #388E3C 100%);
+  background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
   color: #fff;
 }
 .status-badge.quality {
@@ -942,11 +942,11 @@ body {
 /* Quick Actions */
 .quick-actions {
 .market-price {
-  color: #27ae60;
+  color: #1976d2;
   font-weight: 600;
 }
 .profit-margin {
-  color: #4CAF50 !important;
+  color: #1976d2 !important;
   font-weight: 600;
 }
   flex: 1;
@@ -986,7 +986,7 @@ body {
 .table-action-btn .fa-eye,
 .logistics-table .fa-eye,
 .actions-cell .fa-eye {
-  color: #4CAF50 !important;
+  color: #1976d2 !important;
 }
 
 .table-action-btn:hover .fa-eye,
@@ -1002,7 +1002,7 @@ body {
 }
 
 .logistics-table .profit-margin {
-  color: #4CAF50 !important;
+  color: #1976d2 !important;
   font-weight: 600 !important;
 }
 .logistics-search {
@@ -1406,7 +1406,7 @@ input.search-input {
 
 .action-btn-primary {
   flex: 1;
-  background: linear-gradient(135deg, #66BB6A 0%, #4CAF50 100%);
+  background: linear-gradient(135deg, #64b5f6 0%, #1976d2 100%);
   border: none;
   color: white;
   border-radius: 10px;
@@ -1756,8 +1756,9 @@ input.search-input {
   margin-bottom: 4px;
 }
 
+/* .stat-value.green now blue for wholesaler */
 .stat-value.green {
-  color: #4CAF50;
+  color: #1976d2;
 }
 
 .stat-value.blue {
@@ -2213,7 +2214,7 @@ input.search-input {
   align-items: center;
   gap: 8px;
   padding: 10px 16px;
-  background: #22c55e;
+  background: #1976d2;
   color: white;
   border: none;
   border-radius: 8px;
@@ -2224,7 +2225,7 @@ input.search-input {
 }
 
 .add-partner-btn:hover {
-  background: #16a34a;
+  background: #1565c0;
 }
 
 /* Partner Stats Grid */
@@ -2385,6 +2386,21 @@ input.search-input {
   min-height: 400px;
 }
 
+.partner-card.distributor {
+  border: 2px solid rgba(59, 130, 246, 0.2);
+  box-shadow: 0 4px 20px rgba(59, 130, 246, 0.15);
+}
+
+.partner-card.company {
+  border: 2px solid rgba(245, 158, 11, 0.2);
+  box-shadow: 0 4px 20px rgba(245, 158, 11, 0.15);
+}
+
+.partner-card.retailer {
+  border: 2px solid rgba(139, 92, 246, 0.2);
+  box-shadow: 0 4px 20px rgba(139, 92, 246, 0.15);
+}
+
 .partner-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
@@ -2408,6 +2424,18 @@ input.search-input {
   justify-content: center;
   color: white;
   font-size: 20px;
+}
+
+.partner-avatar.distributor {
+  background: #3b82f6;
+}
+
+.partner-avatar.company {
+  background: #f59e0b;
+}
+
+.partner-avatar.retailer {
+  background: #8b5cf6;
 }
 
 .partner-avatar.wholesale {
@@ -2524,6 +2552,30 @@ input.search-input {
   background: #22c55e;
   color: white;
   border: none;
+}
+
+.partner-card.distributor .action-btn.primary {
+  background: #3b82f6;
+}
+
+.partner-card.distributor .action-btn.primary:hover {
+  background: #2563eb;
+}
+
+.partner-card.company .action-btn.primary {
+  background: #f59e0b;
+}
+
+.partner-card.company .action-btn.primary:hover {
+  background: #d97706;
+}
+
+.partner-card.retailer .action-btn.primary {
+  background: #8b5cf6;
+}
+
+.partner-card.retailer .action-btn.primary:hover {
+  background: #7c3aed;
 }
 
 .action-btn.primary:hover {
@@ -2812,9 +2864,9 @@ input.search-input {
 }
 
 .btn-save:hover {
-  background: #16a34a;
+  background: #1565c0;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);
+  box-shadow: 0 4px 12px rgba(25, 118, 210, 0.4);
 }
 
 @media (max-width: 768px) {

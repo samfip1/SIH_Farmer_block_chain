@@ -3,6 +3,7 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  background: #e6f0fa; /* light blue for wholesaler */
 }
 
 .logo {
@@ -12,10 +13,10 @@
   transition: filter 300ms;
 }
 .logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+  filter: drop-shadow(0 0 2em #3498dbaa); /* blue shadow for wholesaler */
 }
 .logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+  filter: drop-shadow(0 0 2em #3498dbaa); /* blue shadow for wholesaler */
 }
 
 @keyframes logo-spin {
